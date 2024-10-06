@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Dynamic Temperature</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 300px;
+            width: 100%;
+            border-radius: 2rem;
+        }
+        #climate-info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body style="margin: 2rem;">
+    <div class="container">
+        <h1><span>NAMA</span>SKARA </h1>
+        <p>Get climate info about a location in bengaluru city</p>
+    </div>
+
+    <select id="place-select">
+        <option value="">Select a place</option>
+        <option value="mg_road">MG Road</option>
+        <option value="koramangala">Koramangala</option>
+        <option value="indiranagar">Indiranagar</option>
+        <option value="jayanagar">Jayanagar</option>
+        <option value="whitefield">Whitefield</option>
+        <option value="sadashivanagar">Sadashivanagar</option>
+        <option value="bangalore_palace">Bangalore Palace</option>
+        <option value="ulsoor">Ulsoor</option>
+        <option value="malleshwaram">Malleshwaram</option>
+        <option value="nagarathpet">Nagarathpet</option>
+    </select>
+
+    <div id="map"></div>
+    <div class="legend" style="margin-left: 2.5rem; font-size: 0.8rem;">
+        <span style="color: red; margin-right:1rem ;">1. above 25 -> red</span>
+        <span style="color: orange; margin-right: 1rem;">2. above 15 -> orange</span>
+        <span style="color: yellow; margin-right: 1rem;">3. above 10 -> yellow</span>
+        <span style="color: aqua; margin-right: 1rem;">4. below 10 -> blue</span>
+    </div>
+    <div id="climate-info"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        const apiKey = 'f5c1a3b47d3485e0b38320d9981c411c';
+        const map = L.map('map').setView([12.9716, 77.5946], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        const data = {
+            mg_road: {
+                name: 'MG Road',
+                coords: [12.9756, 77.6069],
+                overview: 'Central commercial hub with shops and eateries.',
+                climate: {
+                    summer: '20°C to 35°C',
+                    monsoon: 'Heavy rainfall',
+                    winter: '10°C to 25°C',
+                    climateChangeFactors: 'Urbanization, pollution, heat island effect.'
+                }
+            },
+            koramangala: {
+                name: 'Koramangala',
+                coords: [12.9352, 77.6245],
+                overview: 'Trendy neighborhood with cafes and startups.',
+                climate: {
+                    summer: '22°C to 34°C',
+                    monsoon: 'High humidity',
+                    winter: '12°C to 26°C',
+                    climateChangeFactors: 'Urban growth, traffic emissions.'
+                }
+            },
+            indiranagar: {
+                name: 'Indiranagar',
+                coords: [12.9594, 77.6410],
+                overview: 'Fashionable area with boutiques and nightlife.',
+                climate: {
+                    summer: '20°C to 35°C',
+                    monsoon: 'Heavy rains',
+                    winter: '10°C to 25°C',
+                    climateChangeFactors: 'Traffic congestion, loss of greenery.'
+                }
+            },
+            jayanagar: {
+                name: 'Jayanagar',
+                coords: [12.9353, 77.5853],
+                overview: 'Residential area with parks and markets.',
+                climate: {
+                    summer: '21°C to 33°C',
+                    monsoon: 'Moderate rainfall',
+                    winter: '12°C to 24°C',
+                    climateChangeFactors: 'Urban sprawl, waste generation.'
+                }
+            },
+            whitefield: {
+                name: 'Whitefield',
+                coords: [12.9698, 77.7499],
+                overview: 'IT hub with residential and commercial spaces.',
+                climate: {
+                    summer: '22°C to 36°C',
+                    monsoon: 'Significant rainfall',
+                    winter: '14°C to 26°C',
+                    climateChangeFactors: 'High energy consumption, traffic congestion.'
+                }
+            },
+            sadashivanagar: {
+                name: 'Sadashivanagar',
+                coords: [13.0101, 77.5890],
+                overview: 'Upscale residential area with greenery.',
+                climate: {
+                    summer: '20°C to 34°C',
+                    monsoon: 'Moderate rainfall',
+                    winter: '12°C to 25°C',
+                    climateChangeFactors: 'Urban heat, construction.'
+                }
+            },
+            bangalore_palace: {
+                name: 'Bangalore Palace',
+                coords: [12.9989, 77.5929],
+                overview: 'Historic site with gardens.',
+                climate: {
+                    summer: '20°C to 35°C',
+                    monsoon: 'Heavy rains',
+                    winter: '12°C to 24°C',
+                    climateChangeFactors: 'Urban encroachment, green space loss.'
+                }
+            },
+            ulsoor: {
+                name: 'Ulsoor',
+                coords: [12.9718, 77.6101],
+                overview: 'Known for Ulsoor Lake and culture.',
+                climate: {
+                    summer: '21°C to 35°C',
+                    monsoon: 'Moderate rainfall',
+                    winter: '12°C to 25°C',
+                    climateChangeFactors: 'Pollution, water body encroachment.'
+                }
+            },
+            malleshwaram: {
+                name: 'Malleshwaram',
+                coords: [13.0038, 77.5774],
+                overview: 'Traditional area with local markets.',
+                climate: {
+                    summer: '20°C to 34°C',
+                    monsoon: 'Heavy rainfall',
+                    winter: '12°C to 25°C',
+                    climateChangeFactors: 'Urban development, pollution.'
+                }
+            },
+            nagarathpet: {
+                name: 'Nagarathpet',
+                coords: [12.9745, 77.5995],
+                overview: 'Vibrant market area.',
+                climate: {
+                    summer: '21°C to 35°C',
+                    monsoon: 'Significant rainfall',
+                    winter: '12°C to 25°C',
+                    climateChangeFactors: 'High density, traffic pollution.'
+                }
+            }
+        };
+
+        async function getTemperature(lat, lon) {
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+            const response = await fetch(url);
+
+            // Log the response for debugging
+            console.log("Fetching temperature data:", response);
+
+            if (!response.ok) {
+                console.error('Error fetching temperature data:', response.statusText);
+                alert("Error fetching temperature data.");
+                return null; // Return null if the fetch fails
+            }
+
+            const data = await response.json();
+            console.log("Temperature data received:", data.main.temp); // Log the received data
+
+            return data.main.temp; // Return temperature in Celsius
+        }
+
+        function getColorFromTemperature(temp) {
+            if (temp > 25) {
+                return 'red';
+            } else if (temp > 15) {
+                return 'orange';
+            } else if (temp > 10) {
+                return 'yellow';
+            } else {
+                return 'lightblue';
+            }
+        }
+
+        function clearCircles() {
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Circle) {
+                    map.removeLayer(layer);
+                }
+            });
+        }
+
+        async function showClimateInfo() {
+    const placeSelect = document.getElementById('place-select');
+    const selectedPlace = placeSelect.value;
+
+    const climateInfoDiv = document.getElementById('climate-info');
+    climateInfoDiv.innerHTML = ''; // Clear previous climate info
+
+    if (selectedPlace) {
+        const placeData = data[selectedPlace];
+        const [lat, lon] = placeData.coords;
+
+        // Fetch temperature for the selected place
+        const temperature = await getTemperature(lat, lon);
+        if (temperature === null) return; // Exit if temperature fetch failed
+
+        const color = getColorFromTemperature(temperature);
+
+        // Clear existing circles
+        clearCircles();
+
+        // Center map on the selected place
+        map.setView([lat, lon], 15);
+
+        // Add a shaded circle with dynamic color based on temperature
+        L.circle([lat, lon], {
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.5,
+            radius: 1000
+        }).addTo(map);
+
+        // Display climate information including the current temperature
+        climateInfoDiv.innerHTML = `
+            <h2>${placeData.name}</h2>
+            <p><strong>Current Temperature:</strong> ${temperature}°C</p>
+            <p><strong>Overview:</strong> ${placeData.overview}</p>
+            <p><strong>Climate:</strong></p>
+            <ul>
+                <li>Summer: ${placeData.climate.summer}</li>
+                <li>Monsoon: ${placeData.climate.monsoon}</li>
+                <li>Winter: ${placeData.climate.winter}</li>
+                <li><strong>Climate Change Factors:</strong> ${placeData.climate.climateChangeFactors}</li>
+            </ul>
+
+        `;
+    } else {
+        alert('Please select a place.');
+    }
+}
+        // Add event listener to the dropdown
+        document.getElementById('place-select').addEventListener('change', showClimateInfo);
+    </script>
+</body>
+</html>
