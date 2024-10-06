@@ -83,3 +83,11 @@ select{
         cursor .4s step-end infinite alternate;
 }
 
+
+.legend{
+    font-weight: 1000 ;
+}
+.leg {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px white;
+}
